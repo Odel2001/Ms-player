@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Music Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('media/bckgrnd.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .music-player {
+            background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            text-align: center;
+            color: gold;
+        }
+
+        .music-player img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        button {
+            background-color: #000; /* Black button background */
+            color: gold;
+            border: 2px solid gold;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, border-color 0.3s;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: gold;
+            color: black;
+            border-color: black;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            background: #333; /* Dark background for the slider */
+            height: 6px;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            background: gold;
+            border: 2px solid black;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #ffdd00;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            background: gold;
+            border: 2px solid black;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #ffdd00;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            color: gold;
+        }
+
+        span {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="music-player">
+        <img src="media/Carry You.jpg".jpg" alt="Album Cover">
+        <audio id="audio" src="media/martin garrix - carry you.mp3" preload="auto"></audio>
+        <div class="controls">
+            <button id="playPauseBtn">▶</button>
+            <input type="range" id="progressBar" value="0" min="0" max="100">
+            <div class="time-display">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('audio');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const progressBar = document.getElementById('progressBar');
+            const currentTimeDisplay = document.getElementById('currentTime');
+            const durationDisplay = document.getElementById('duration');
+
+            // Update progress bar and time display
+            audio.addEventListener('timeupdate', () => {
+                const { currentTime, duration } = audio;
+                if (!isNaN(duration)) {
+                    progressBar.value = (currentTime / duration) * 100;
+                    currentTimeDisplay.textContent = formatTime(currentTime);
+                    durationDisplay.textContent = formatTime(duration);
+                }
+            });
+
+            // Update audio time when progress bar changes
+            progressBar.addEventListener('input', () => {
+                const { duration } = audio;
+                audio.currentTime = (progressBar.value / 100) * duration;
+            });
+
+            // Play or pause audio
+            playPauseBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                    playPauseBtn.textContent = '⏸'; // Pause icon
+                } else {
+                    audio.pause();
+                    playPauseBtn.textContent = '▶'; // Play icon
+                }
+            });
+
+            // Format time from seconds to mm:ss
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+                return `${minutes}:${secs}`;
+            }
+        });
+    </script>
+</body>
+</html>
